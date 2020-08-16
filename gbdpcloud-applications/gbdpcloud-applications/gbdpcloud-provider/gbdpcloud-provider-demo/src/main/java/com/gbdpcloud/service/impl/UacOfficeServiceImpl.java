@@ -46,12 +46,12 @@ public class UacOfficeServiceImpl extends BaseService<UacOffice>implements UacOf
             count += deleteById(s);
         }
         return count ;
-    }
+    }*/
 
     @ApiOperation(value = "获得全部机构")
     @Override
     public List<UacOffice> listAll() {
-        List<UacOffice> list = uacOfficeMapper.selectAll();
+        List<UacOffice> list = uacOfficeMapper.list();
         sort(list);
         return list;
     }
@@ -69,7 +69,7 @@ public class UacOfficeServiceImpl extends BaseService<UacOffice>implements UacOf
     @ApiOperation(value = "查找某节点的全部子节点")
     public void getsub(String id,List<String> ids){
         UacOffice u = new UacOffice();
-        u.setParent_id(id);
+        u.setParentId(id);
         List<UacOffice> list = list(u);
         if(list.size() >0){
             for(UacOffice i :list){
@@ -77,5 +77,5 @@ public class UacOfficeServiceImpl extends BaseService<UacOffice>implements UacOf
                 getsub(i.getId(),ids);
             }
         }
-    }*/
+    }
 }

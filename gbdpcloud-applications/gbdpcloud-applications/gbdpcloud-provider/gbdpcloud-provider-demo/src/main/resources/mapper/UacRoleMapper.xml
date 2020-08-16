@@ -20,4 +20,37 @@
     id, name, enname, role_type, data_scope, is_sys, use_able, create_by, create_date, 
     update_by, update_date, remarks, del_flag
   </sql>
+
+  <!--过期，仅供参考-->
+  <select id="list" resultMap="BaseResultMap" >
+    SELECT
+    <include refid="Base_Column_List"/>
+    FROM uac_role t
+    <where>
+      t.del_flag = '0'
+    </where>
+  </select>
+
+  <!--过期，仅供参考-->
+  <select id="get" resultMap="BaseResultMap" >
+    SELECT
+    <include refid="Base_Column_List"/>
+    FROM uac_role t
+    WHERE t.del_flag = '0'
+    <if test="id != null and id != ''">
+      AND t.id = #{id}
+    </if>
+  </select>
+
+  <!--逻辑删除-->
+  <update id="deleteByLogic">
+        DELETE uac_role
+        WHERE id = #{id}
+    </update>
+
+  <update id="deleteManyByLogic">
+        DELETE uac_role
+        WHERE id IN (#{ids})
+    </update>
+
 </mapper>

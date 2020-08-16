@@ -20,9 +20,7 @@ import javax.validation.constraints.NotBlank;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.Socket;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Api(value = "MasterController")
 @RequestMapping("")
@@ -69,9 +67,14 @@ public class MasterController extends BaseController {
     @Resource
     private CodeVersionService codeVersionService;
 
+    @Resource
+    private OfficeService officeService;
+
+
 
     @ApiOperation(value = "我的项目-首页")
     @GetMapping("/project/index")
+    @CrossOrigin(origins = {"http://localhost:9527", "null"})
     public Result project_index() {
         UacUserDto user= UacUserUtils.getUserInfoFromRequest();
         /*
@@ -94,33 +97,30 @@ public class MasterController extends BaseController {
         }
                  */
         List<ProjectMember> list=projectMemberService.getByMember(user.getId());
-        List<Project> list1=new ArrayList<Project>();
+        System.out.println(list.size());
+
+        String ids="";
         for(int i=0;i<list.size();i++){
             String project_ID=list.get(i).getProject_ID();
-           Project project= projectService.getById(project_ID);
-           list1.add(project);
+           ids+=project_ID+",";
         }
+        ids=ids.substring(0,ids.length()-1);
+        List<Project> list1=projectService.selectByIds(ids);
+
+        System.out.println("项目个数为："+list1.size());
 
         List<String> office_ids= UacUserUtils.getOfficeId(user);
-        List<String> office_names=new ArrayList<String>();
-        for(int i=0;i<office_ids.size();i++)
-        {
-
-            String office_name=uacOfficeService.getById(office_ids.get(i)).getName();
-
-            office_names.add(office_name);
-        }
 
         List<Project> deleteList = new ArrayList<Project>();
         for(int i=0;i<list1.size();i++)
         {
             Project project=list1.get(i);
             int delete_mark=0;
-           String range=project.getRange();
-           String [] strs=range.split(";");
+           String range=project.getRanges();
+           String [] strs=range.split(",");
            for(int j=0;j<strs.length;j++)
            {
-               if(office_names.contains(strs[j]) ||strs[j].equals("project")){
+               if(office_ids.contains(strs[j]) ||strs[j].equals("project")){
                    delete_mark=1;
                    break;
                }
@@ -142,6 +142,7 @@ public class MasterController extends BaseController {
             p.setVersions(version);
             list1.set(i,p);
         }
+
         return ResultGenerator.genSuccessResult(list1);
     }
 
@@ -149,16 +150,13 @@ public class MasterController extends BaseController {
     @GetMapping("/project/projectInfo/{id}")
     public Result project_projectInfo(@PathVariable @Valid @NotBlank(message = "项目标识不能为空") String id){
         Project project = projectService.getById(id);
-        List<ProjectMember> list=projectMemberService.getByProject(project.getId());
-        List<String> members=project.getMembers();
-        Map<String,String> memberMap=project.getMemberMap();
-        for(int i=0;i<list.size();i++){
-            String member_ID=list.get(i).getMember_ID();
+        String [] list= project.getMember().split(",");
+        Map<String,String> memberMap=new HashMap<>();
+        for(int i=0;i<list.length;i++){
+            String member_ID=list[i];
             String member=uacUserService.getById(member_ID).getLoginName();
-            members.add(member);
             memberMap.put(member,member_ID);
         }
-        project.setMembers(members);
         project.setMemberMap(memberMap);
 
         /*
@@ -174,8 +172,9 @@ public class MasterController extends BaseController {
             pro.setMembers(members);
             pro.setMemberMap(memberMap);
         }*/
-        UacOffice uac=new UacOffice();UacUser user=new UacUser();
-        List<UacOffice> officeList=uacOfficeService.list(uac);
+        UacOffice uac=new UacOffice();
+        UacUser user=new UacUser();
+        List<UacOffice> officeList=uacOfficeService.listAll();
         List<Object> lists=new ArrayList<>();
         List<UacUser> uacUserList=uacUserService.list(user);
         lists.add(project);

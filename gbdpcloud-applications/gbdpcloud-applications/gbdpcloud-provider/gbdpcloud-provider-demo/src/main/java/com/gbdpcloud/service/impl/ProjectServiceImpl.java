@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -43,5 +44,25 @@ public class ProjectServiceImpl extends BaseService<Project> implements ProjectS
         Project project=new Project();
         project.setName(name);
         return projectMapper.selectOne(project);
+
+    }
+
+    public List<Project> selectByIds(String ids) {
+
+
+        return projectMapper.selectIds(Arrays.asList(ids.split(",")));
+
+    }
+
+    public Project selectById(String id) {
+
+        return projectMapper.selectByPrimaryKey(id);
+
+    }
+
+    public int deleteIds(String ids) {
+
+        return projectMapper.deleteByIds(ids);
+
     }
 }

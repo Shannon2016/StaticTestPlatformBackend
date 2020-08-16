@@ -20,6 +20,7 @@ import javax.validation.constraints.NotBlank;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.UUID;
 
 @Api(value = "ConfigurationController")
 @RequestMapping("/ConfigurationController")
@@ -63,18 +64,23 @@ public class ConfigurationController extends BaseController {
 
     @ApiOperation(value = "添加方案")
     @PostMapping("/add")
-    public Result save(@RequestBody @Valid Configuration configuration,
+    public Result save(@RequestParam(value = "name")String name,
+                       @RequestParam(value = "tools")String tools,
+                       @RequestParam(value = "rule")String rule,
+                       @RequestParam(value = "is_common")String is_common,
                        @RequestParam(value = "header") MultipartFile header,
                        @RequestParam(value = "define")MultipartFile [] define)  {
+        Configuration configuration=new Configuration();
+        configuration.setName(name);
+        configuration.setIs_common(is_common);
+        configuration.setTools(tools);
+        configuration.setRule(rule);
+        configuration.setId(UUID.randomUUID().toString());
+        configuration.setDelFlag("0");
+        configuration.setIs_default("0");
         log.info("ConfigurationController save [{}]", configuration);
         //TODO:上传文件
-        int i = configurationService.saveOrUpdate(configuration);
-        if(i<=0)
-        {
-            return ResultGenerator.genFailResult("添加失败！");
-        }
-        Configuration con=configurationService.getOne(configuration);
-        String basePath=Base_PATH+con.getId()+"/"+"header"+"/";
+        String basePath=Base_PATH+configuration.getId()+"/"+"header"+"/";
         if(header==null)
         {
             return ResultGenerator.genFailResult("头文件不能为空");
@@ -89,7 +95,7 @@ public class ConfigurationController extends BaseController {
         File dest = new File(filePath);
         try {
             header.transferTo(dest);
-            con.setHeader(filePath);
+            configuration.setHeader(filePath);
         }catch (IOException e){
 
             ResultGenerator.genFailResult("文件上传失败！");
@@ -99,7 +105,7 @@ public class ConfigurationController extends BaseController {
             return ResultGenerator.genFailResult("上传文件不能为空");
         }
 
-        basePath=Base_PATH+con.getId()+"/"+"define"+"/";
+        basePath=Base_PATH+configuration.getId()+"/"+"define"+"/";
         if (basePath.endsWith("/")) {
             basePath = basePath.substring(0, basePath.length() - 1);
         }
@@ -120,11 +126,11 @@ public class ConfigurationController extends BaseController {
             }
             }
 
-        con.setDefine(paths.substring(0,paths.length()-1));
+        configuration.setDefine(paths.substring(0,paths.length()-1));
 
-       int j= configurationService.update(con);
+        int i = configurationService.saveOrUpdate(configuration);
 
-        return j > 0 ? ResultGenerator.genSuccessResult() : ResultGenerator.genFailResult("添加失败！");
+        return i > 0 ? ResultGenerator.genSuccessResult() : ResultGenerator.genFailResult("添加失败！");
     }
 
     @ApiOperation(value = "更新方案")

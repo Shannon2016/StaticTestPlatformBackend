@@ -17,4 +17,9 @@ public interface ProjectMemberService extends Service<ProjectMember> {
     @ApiOperation(value = "删除项目成员")
     int delete(ProjectMember p);
 
+    @ApiOperation(value = "删除多个成员")
+    public int deleteIds(List<String> ids);
+
+
+
 }

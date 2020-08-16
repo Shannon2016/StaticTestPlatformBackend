@@ -26,6 +26,9 @@ public class ToolDeploymentInfoController extends BaseController {
     @Resource
     private ToolDeploymentInfoService toolDeploymentInfoService;
 
+    @Resource
+    private UserLogController userLogController;
+
     @ApiOperation("辅助函数-测试连接")
     public ToolDeploymentInfo test_Connect(ToolDeploymentInfo toolDeploymentInfo){
 
@@ -46,6 +49,7 @@ public class ToolDeploymentInfoController extends BaseController {
     @PostMapping("/add")
     public Result save(@RequestBody @Valid ToolDeploymentInfo toolDeploymentInfo) {
         log.info("toolDeploymentInfoController save [{}]", toolDeploymentInfo);
+        userLogController.addLog("添加了服务器"+toolDeploymentInfo.getTool());
         ToolDeploymentInfo tool=test_Connect(toolDeploymentInfo);
         int i =toolDeploymentInfoService.saveOrUpdate(tool);
         return i > 0 ? ResultGenerator.genSuccessResult() : ResultGenerator.genFailResult("插入失败！");

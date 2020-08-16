@@ -25,13 +25,18 @@ public class ProjectMemberServiceImpl extends BaseService<ProjectMember> impleme
 
     @Override
     public List<ProjectMember> getByProject(String project_ID) {
-        ProjectMember projectMember=new ProjectMember();
-        projectMember.setProject_ID(project_ID);
-        return projectMemberMapper.select(projectMember);
+
+        return projectMemberMapper.selectByProjectID(project_ID);
     }
 
     @Override
     public int delete(ProjectMember p) {
         return projectMemberMapper.delete(p);
+    }
+
+    public int deleteIds(List<String> ids) {
+
+        return projectMemberMapper.deleteManyIds(ids);
+
     }
 }

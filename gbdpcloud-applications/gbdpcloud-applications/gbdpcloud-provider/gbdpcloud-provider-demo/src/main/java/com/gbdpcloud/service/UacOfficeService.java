@@ -16,8 +16,8 @@ public interface UacOfficeService extends Service<UacOffice> {
     public int updateInfo(@Valid UacOffice uacOffice,String id);
 
     @ApiOperation(value = "级联删除机构")
-    public int delete(String oid,String uid);
+    public int delete(String oid,String uid);*/
 
     @ApiOperation(value = "获得机构列表")
-    public List<UacOffice> listAll();*/
+    public List<UacOffice> listAll();
 }

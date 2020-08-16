@@ -109,6 +109,7 @@ public class DemoDemoController extends BaseController {
 
     @ApiOperation(value = "查看所有")
     @GetMapping("/all")
+    @CrossOrigin(origins = {"http://localhost:9527", "null"})
     public Result listAll(DemoDemo demoDemo) {
         log.info("DemoDemoController listAll [{}]", demoDemo);
         List<DemoDemo> list = demoDemoService.list(demoDemo);

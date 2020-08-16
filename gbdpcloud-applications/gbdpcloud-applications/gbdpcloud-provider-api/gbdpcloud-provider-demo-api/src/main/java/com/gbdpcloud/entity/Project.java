@@ -82,19 +82,10 @@ public class Project extends BaseEntity {
 	 * default  : null
 	 */
 	@ApiModelProperty(value = "可见范围")
-	@Column(name = "range", nullable = true, length = 20)
-	private String range;
+	@Column(name = "ranges", nullable = true, length = 2000)
+	private String ranges;
 
 
-
-	/**
-	 * 芯片类型
-	 * nullable : true
-	 * default  : null
-	 */
-	@ApiModelProperty(value = "芯片类型")
-	@Column(name = "chip_type", nullable = true, length = 64)
-	private String chip_type;
 
 	/**
 	 * 编译环境

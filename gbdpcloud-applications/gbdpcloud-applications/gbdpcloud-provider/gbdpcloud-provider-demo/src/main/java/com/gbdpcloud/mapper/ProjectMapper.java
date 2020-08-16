@@ -4,8 +4,12 @@ import com.gbdpcloud.entity.Project;
 import gbdpcloudcommonbase.gbdpcloudcommonbase.core.IMapper;
 import org.apache.ibatis.annotations.Mapper;
 
+import java.util.List;
+
 @Mapper
 public interface ProjectMapper extends IMapper<Project> {
+
+    List<Project> selectIds(List<String> list);
     //int deleteByPrimaryKey(String id);
 
    // int insert(Project record);

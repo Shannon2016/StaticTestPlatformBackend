@@ -29,4 +29,31 @@
     fax, use_able, primary_person_id, deputy_person_id, create_by, create_date, update_by, 
     update_date, remarks, del_flag
   </sql>
+
+  <select id="list" resultMap="BaseResultMap" >
+    SELECT* FROM uac_office WHERE del_flag = '0'
+  </select>
+
+  <!--过期，仅供参考-->
+  <select id="get" resultMap="BaseResultMap" >
+    SELECT
+    <include refid="Base_Column_List"/>
+    FROM uac_office t
+    WHERE t.del_flag = '0'
+    <if test="id != null and id != ''">
+      AND t.id = #{id}
+    </if>
+  </select>
+
+  <!--逻辑删除-->
+  <update id="deleteByLogic">
+        DELETE uac_office
+        WHERE id = #{id}
+    </update>
+
+  <update id="deleteManyByLogic">
+        DELETE uac_office
+        WHERE id IN (#{ids})
+    </update>
+
 </mapper>

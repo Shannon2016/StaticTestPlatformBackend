@@ -16,4 +16,46 @@
     <sql id="Base_Column_List">
     id, member_ID, project_ID, create_date, update_date, create_by, update_by, remarks, del_flag
   </sql>
+
+    <!--过期，仅供参考-->
+    <select id="list" resultMap="BaseResultMap" >
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM project_member t
+        <where>
+            t.del_flag = '0'
+        </where>
+    </select>
+
+    <select id="selectByProjectID" resultMap="BaseResultMap" >
+        SELECT* FROM project_member t
+        <where>
+            t.del_flag = '0'
+            AND t.project_ID = #{id}
+        </where>
+    </select>
+
+    <!--过期，仅供参考-->
+    <select id="get" resultMap="BaseResultMap" >
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM project_member t
+        WHERE t.del_flag = '0'
+        <if test="id != null and id != ''">
+            AND t.id = #{id}
+        </if>
+    </select>
+
+    <!--逻辑删除-->
+    <update id="deleteByLogic">
+        DELETE from project_member WHERE id = #{id}
+    </update>
+
+    <update id="deleteManyIds">
+        DELETE from project_member WHERE id in
+        <foreach collection="list" item="id" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+    </update>
+
 </mapper>

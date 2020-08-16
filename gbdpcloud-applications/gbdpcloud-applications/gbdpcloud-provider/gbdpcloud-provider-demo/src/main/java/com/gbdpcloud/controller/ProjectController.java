@@ -8,6 +8,7 @@ import com.gbdpcloud.service.UacUserService;
 import gbdpcloudcommonbase.gbdpcloudcommonbase.core.BaseController;
 import gbdpcloudcommonbase.gbdpcloudcommonbase.httpResult.Result;
 import gbdpcloudcommonbase.gbdpcloudcommonbase.httpResult.ResultGenerator;
+import gbdpcloudcommonbase.gbdpcloudcommonbase.security.UacUserUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.validation.annotation.Validated;
@@ -17,7 +18,9 @@ import javax.annotation.Resource;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 
 @Api(value = "ProjectController")
 @RequestMapping("/ProjectController")
@@ -42,67 +45,119 @@ public class ProjectController extends BaseController {
     @PostMapping("/add")
     public Result save(@RequestBody @Valid Project project) {
         log.info("projectController save [{}]", project);
+        project.setLeader(UacUserUtils.getUserInfoFromRequest().getLoginName());
+        project.setId(UUID.randomUUID().toString());
+        project.setDelFlag("0");
         int ii=projectService.save(project);
         if(ii<=0){
             return ResultGenerator.genFailResult("添加失败,项目添加失败");
         }
-        Project p =projectService.getOne(project);
-        project.setId(p.getId());
-        List<String> members=project.getMembers();
+        String member=project.getMember();
+        String []members=member.split(",");
+        List<ProjectMember> projectMemberList=new ArrayList<ProjectMember>();
+        for(int i=0;i<members.length;i++){
+            ProjectMember projectMember=new ProjectMember();
+            projectMember.setProject_ID(project.getId());
+            projectMember.setMember_ID(members[i]);
+            projectMemberList.add(projectMember);
+        }
+        int j=projectMemberService.saveBatch(projectMemberList);
+        if(j<=0){
+            return ResultGenerator.genFailResult("添加失败,项目成员添加失败");
+        }
         ProjectMember projectMember=new ProjectMember();
         projectMember.setProject_ID(project.getId());
-        for(int i=0;i<members.size();i++){
-            projectMember.setMember_ID(members.get(i));
-            int j=projectMemberService.save(projectMember);
-            if(j<=0){
-                return ResultGenerator.genFailResult("添加失败,项目成员添加失败");
-            }
-        }
-        projectMember.setMember_ID(uacUserService.getByName(project.getLeader()).getId());
-        int j=projectMemberService.save(projectMember);
-        if(j<=0){
+        projectMember.setMember_ID(UacUserUtils.getUserInfoFromRequest().getId());
+        int i=projectMemberService.save(projectMember);
+        if(i<=0){
             return ResultGenerator.genFailResult("添加失败,项目组长添加失败");
         }
-
         return  ResultGenerator.genSuccessResult();
     }
 
     @ApiOperation(value = "编辑项目")
     @PutMapping("/update")
-    public Result update(@RequestBody @Valid Project project) {
+    public Result update(@RequestBody @Valid Project project,@RequestParam(value = "user_id") String user_id) {
         log.info("projectController update [{}]", project);
-        Project pro=projectService.getById(project.getId());
-        List<ProjectMember> list=projectMemberService.getByProject(pro.getId());
-        List<String> members=project.getMembers();
-        for(int i=0;i<list.size();i++)
+        String preMember=projectService.selectById(project.getId()).getMember();
+        String newMember=project.getMember();
+        if(preMember.equals("")&&!newMember.equals(""))
         {
-            ProjectMember p=list.get(i);
-            if(!members.contains(p.getMember_ID())) {
-                list.remove(p);
-                int j = projectMemberService.deleteById(p.getId());
-                if (j <= 0) {
-                    return ResultGenerator.genFailResult("删除项目成员失败");
-                }
-            }
-        }
-        List<String> pre_members=new ArrayList<String>();
-        for(int i=0;i<list.size();i++)
-        {
-            pre_members.add(list.get(i).getMember_ID());
-        }
-        ProjectMember p=new ProjectMember();
-        p.setProject_ID(pro.getId());
-        for(int i=0;i<members.size();i++) {
-            if(!pre_members.contains(members.get(i)))
+            String [] newMemberList=newMember.split(",");
+            List<ProjectMember> list1=new ArrayList<>();
+            for(int i=0;i<newMemberList.length;i++)
             {
-                p.setMember_ID(members.get(i));
-                int j = projectMemberService.saveOrUpdate(p);
-                if (j <= 0) {
+                ProjectMember member=new ProjectMember();
+                member.setMember_ID(newMemberList[i]);
+                member.setProject_ID(project.getId());
+                list1.add(member);
+            }
+
+            if(list1.size()!=0) {
+                int j1 = projectMemberService.saveBatch(list1);
+                if (j1 <= 0) {
                     return ResultGenerator.genFailResult("添加项目成员失败");
                 }
             }
 
+        }else if(newMember.equals("")&&!preMember.equals(""))
+        {
+            List<ProjectMember> list=projectMemberService.getByProject(project.getId());
+            List<String> deleteIDs=new ArrayList<String>();
+            for(int i=0;i<list.size();i++)
+            {
+                deleteIDs.add(list.get(i).getId());
+            }
+            if(deleteIDs.size()!=0) {
+                int j = projectMemberService.deleteIds(deleteIDs);
+                if (j <= 0) {
+                    return ResultGenerator.genFailResult("删除项目成员失败");
+                }
+            }
+        }else if(!newMember.equals(preMember))
+        {
+            List<ProjectMember> list=projectMemberService.getByProject(project.getId());
+            String [] newMembers=newMember.split(",");
+            String [] preMembers=preMember.split(",");
+            List<String> newMemberList=new ArrayList<>();
+            List<String> preMemberList=new ArrayList<>();
+            newMemberList.addAll(Arrays.asList(newMembers));
+            preMemberList.addAll(Arrays.asList(preMembers));
+            List<String> deleteIDs=new ArrayList<String>();
+            List<ProjectMember> projectMemberList=new ArrayList<>();
+
+            for(int i=0;i<list.size();i++)
+            {
+                ProjectMember p=list.get(i);
+                if(!newMember.contains(p.getMember_ID())&&!p.getMember_ID().equals(user_id)) {
+                    deleteIDs.add(p.getId());
+                }
+            }
+            if(deleteIDs.size()!=0) {
+                int j = projectMemberService.deleteIds(deleteIDs);
+                if (j <= 0) {
+                    return ResultGenerator.genFailResult("删除项目成员失败");
+                }
+            }
+
+            for(int i=0;i<newMemberList.size();i++)
+            {
+                if(!preMemberList.contains(newMemberList.get(i)))
+                {
+                    ProjectMember p=new ProjectMember();
+                    p.setProject_ID(project.getId());
+                    p.setMember_ID(newMemberList.get(i));
+                    projectMemberList.add(p);
+                }
+            }
+            if(projectMemberList.size()!=0) {
+            int j1 = projectMemberService.saveBatch(projectMemberList);
+            if (j1 <= 0) {
+                return ResultGenerator.genFailResult("添加项目成员失败");
+            }
         }
+        }
+
         int i = projectService.update(project);
         return i > 0 ? ResultGenerator.genSuccessResult() : ResultGenerator.genFailResult("更新项目信息失败！");
     }
