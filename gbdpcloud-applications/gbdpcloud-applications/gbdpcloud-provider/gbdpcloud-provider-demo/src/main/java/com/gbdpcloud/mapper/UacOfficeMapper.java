@@ -20,5 +20,8 @@ public interface UacOfficeMapper extends IMapper<UacOffice> {
 
     //int updateByPrimaryKey(UacOffice record);
 
-    List<UacOffice> list();
+    List<UacOffice> selectByname(String name);
+    List<UacOffice> getAll();
+    //UacOffice getRoot();
+    List<UacOffice>  getchildren(String pid);
 }

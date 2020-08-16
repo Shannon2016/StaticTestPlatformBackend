@@ -16,11 +16,11 @@ public interface UacUserService extends Service<UacUser>{
 
 
     @ApiOperation(value = "添加用户")
-    int addU(UacUser uacUser,String id);
+    int addU(UacUser uacUser,String office,String id);
 
 
     @ApiOperation(value = "批量添加用户")
-    int addList(List<UacUser> list, String id);
+    int addList(List<UacUser> list, String office,String id);
 
     @ApiOperation(value = "获得全部用户列表")
     public List<UacUser> getAll();

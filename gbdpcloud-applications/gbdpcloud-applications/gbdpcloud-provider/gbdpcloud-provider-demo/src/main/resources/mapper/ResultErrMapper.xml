@@ -55,5 +55,9 @@
         WHERE id IN (#{ids})
     </update>
 
-
+  <select id="selectByTestID" parameterType="String" resultMap="BaseResultMap">
+    SELECT *
+    from result_err
+    where test_ID = #{id}
+  </select>
 </mapper>

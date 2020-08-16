@@ -54,4 +54,10 @@
         WHERE id IN (#{ids})
     </update>
 
+  <select id="selectProjectVserionAndName"  resultMap="BaseResultMap">
+    SELECT *
+    from code
+    where name = #{name} and code_version_ID = #{version} and project_ID= #{pid}
+  </select>
+
 </mapper>
