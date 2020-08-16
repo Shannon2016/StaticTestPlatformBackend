@@ -148,6 +148,7 @@ public class MasterController extends BaseController {
 
     @ApiOperation(value = "我的项目-基础信息")
     @GetMapping("/project/projectInfo/{id}")
+    @CrossOrigin(origins = {"http://localhost:9527", "null"})
     public Result project_projectInfo(@PathVariable @Valid @NotBlank(message = "项目标识不能为空") String id){
         Project project = projectService.getById(id);
         String [] list= project.getMember().split(",");
@@ -185,6 +186,7 @@ public class MasterController extends BaseController {
 
     @ApiOperation(value = "我的项目-新建项目")
     @GetMapping("/project/add")
+    @CrossOrigin(origins = {"http://localhost:9527", "null"})
     public Result project_add(UacUser uacUser, UacOffice uacOffice){
 
         List<Object> lists=new ArrayList<>();
@@ -198,6 +200,7 @@ public class MasterController extends BaseController {
 
     @ApiOperation(value = "系统配置")
     @GetMapping("/systemConfig/index")
+    @CrossOrigin(origins = {"http://localhost:9527", "null"})
     public Result systemConfig_index(ToolDeploymentInfo tools){
         List<ToolDeploymentInfo> list=toolDeploymentInfoService.list(tools);
         for(int i=0;i<list.size();i++)
@@ -223,6 +226,7 @@ public class MasterController extends BaseController {
 
     @GetMapping("/systemLog/index")
     @ApiOperation(value = "系统日志")
+    @CrossOrigin(origins = {"http://localhost:9527", "null"})
     public Result systemLog_index(UserLog userLog){
         List<UserLog> list=userLogService.list(userLog);
         return ResultGenerator.genSuccessResult(list);
@@ -230,6 +234,7 @@ public class MasterController extends BaseController {
 
     @ApiOperation(value = "配置管理")
     @GetMapping("/configmgmt/index")
+    @CrossOrigin(origins = {"http://localhost:9527", "null"})
     public Result configmgmt_index(){
         List<Configuration> list=configurationService.getCommon();
         return ResultGenerator.genSuccessResult(list);
@@ -237,6 +242,7 @@ public class MasterController extends BaseController {
 
     @ApiOperation(value = "用户管理-部门管理")
     @GetMapping("/usermgmt/orgmgmt")
+    @CrossOrigin(origins = {"http://localhost:9527", "null"})
     public Result usermgmt_orgmgmt(UacOffice uacOffice){
         List<UacOffice> list=uacOfficeService.list(uacOffice);
         return ResultGenerator.genSuccessResult(list);
@@ -244,6 +250,7 @@ public class MasterController extends BaseController {
 
     @ApiOperation(value = "用户管理-首页")
     @GetMapping("/usermgmt/index")
+    @CrossOrigin(origins = {"http://localhost:9527", "null"})
     public Result usermgmt_index(UacUser uacUser){
         List<UacUser> list=uacUserService.list(uacUser);
         for(int i=0;i<list.size();i++){
@@ -261,6 +268,7 @@ public class MasterController extends BaseController {
 
     @ApiOperation(value = "我的项目-分析结果")
     @GetMapping("/project/analysisResult/{id}")
+    @CrossOrigin(origins = {"http://localhost:9527", "null"})
     public Result project_analysisResult(@PathVariable @Valid @NotBlank(message = "项目标识不能为空") String id){
         //TODO 状态码更新
         List<Test> list=testService.getByProject(id);
@@ -278,6 +286,7 @@ public class MasterController extends BaseController {
 
     @ApiOperation(value = "我的项目-查看分析")
     @GetMapping("/project/resultErr/{id}")
+    @CrossOrigin(origins = {"http://localhost:9527", "null"})
     public Result project_resultErr(@PathVariable @Valid @NotBlank(message = "测试计划标识不能为空") String id){
         Test t=testService.getById(id);
         String code_version=t.getCode_version();
@@ -292,6 +301,7 @@ public class MasterController extends BaseController {
 
     @ApiOperation(value = "我的项目-代码管理")
     @GetMapping("/project/codemgmt/{id}")
+    @CrossOrigin(origins = {"http://localhost:9527", "null"})
     public Result project_codemgmt(@PathVariable @Valid @NotBlank(message = "项目标识不能为空") String id){
 
         List<CodeVersion> list=codeVersionService.getByProject(id);
@@ -338,6 +348,7 @@ public class MasterController extends BaseController {
 
     @ApiOperation("我的项目-代码浏览")
     @GetMapping("/project/codeView/{id}")
+    @CrossOrigin(origins = {"http://localhost:9527", "null"})
     public Result project_codeView(@PathVariable @Valid @NotBlank(message = "代码工程id不能为空") String id){
         //TODO:代码目录展示
         List<Code> list=codeService.getByCodeVersion(id);

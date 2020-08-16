@@ -47,6 +47,7 @@ public class ToolDeploymentInfoController extends BaseController {
 
     @ApiOperation(value = "添加服务器")
     @PostMapping("/add")
+    @CrossOrigin(origins = {"http://localhost:9527", "null"})
     public Result save(@RequestBody @Valid ToolDeploymentInfo toolDeploymentInfo) {
         log.info("toolDeploymentInfoController save [{}]", toolDeploymentInfo);
         userLogController.addLog("添加了服务器"+toolDeploymentInfo.getTool());
@@ -57,6 +58,7 @@ public class ToolDeploymentInfoController extends BaseController {
 
     @ApiOperation(value = "编辑服务器")
     @PutMapping("/update")
+    @CrossOrigin(origins = {"http://localhost:9527", "null"})
     public Result update(@RequestBody @Valid ToolDeploymentInfo toolDeploymentInfo) {
         log.info("toolDeploymentInfoController update [{}]", toolDeploymentInfo);
         ToolDeploymentInfo tool=test_Connect(toolDeploymentInfo);
@@ -66,6 +68,7 @@ public class ToolDeploymentInfoController extends BaseController {
 
     @ApiOperation(value = "删除服务器")
     @DeleteMapping("/delete/{id}")
+    @CrossOrigin(origins = {"http://localhost:9527", "null"})
     public Result delete(@PathVariable @Valid @NotBlank(message = "id不能为空") String id) {
         log.info("toolDeploymentInfoController delete [{}]", id);
         int i =toolDeploymentInfoService.deleteById(id);
@@ -73,7 +76,8 @@ public class ToolDeploymentInfoController extends BaseController {
     }
 
     @ApiOperation(value = "测试连接")
-    @GetMapping("/testConnect")
+    @PostMapping("/testConnect")
+    @CrossOrigin(origins = {"http://localhost:9527", "null"})
     public Result connect(@RequestBody @Valid ToolDeploymentInfo toolDeploymentInfo){
         ToolDeploymentInfo tool=test_Connect(toolDeploymentInfo);
         return ResultGenerator.genSuccessResult(tool.getState());
