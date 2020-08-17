@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import javax.validation.Valid;
 import java.util.List;
 
 
@@ -44,5 +45,13 @@ public class CodeServiceImpl extends BaseService<Code> implements CodeService {
         Code code=new Code();
         code.setCode_version_ID(id);
         return codeMapper.select(code);
+    }
+    @Override
+    public Code getByProjectVserionAndName(@Valid String pid, @Valid String version1, @Valid String name) {
+        Code code = new Code();
+        code.setCode_version_ID(version1);
+        code.setProject_ID(pid);
+        code.setName(name);
+        return codeMapper.selectProjectVserionAndName(pid, version1, name).get(0);
     }
 }

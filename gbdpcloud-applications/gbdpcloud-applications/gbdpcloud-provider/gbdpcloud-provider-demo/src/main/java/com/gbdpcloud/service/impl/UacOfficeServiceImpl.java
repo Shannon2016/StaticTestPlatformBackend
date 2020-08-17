@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
-import javax.validation.Valid;
 import java.util.*;
 
 @Service
@@ -46,12 +45,12 @@ public class UacOfficeServiceImpl extends BaseService<UacOffice>implements UacOf
             count += deleteById(s);
         }
         return count ;
-    }*/
+    }
 
     @ApiOperation(value = "获得全部机构")
     @Override
     public List<UacOffice> listAll() {
-        List<UacOffice> list = uacOfficeMapper.list();
+        List<UacOffice> list = uacOfficeMapper.selectAll();
         sort(list);
         return list;
     }
@@ -69,7 +68,7 @@ public class UacOfficeServiceImpl extends BaseService<UacOffice>implements UacOf
     @ApiOperation(value = "查找某节点的全部子节点")
     public void getsub(String id,List<String> ids){
         UacOffice u = new UacOffice();
-        u.setParentId(id);
+        u.setParent_id(id);
         List<UacOffice> list = list(u);
         if(list.size() >0){
             for(UacOffice i :list){
@@ -77,5 +76,44 @@ public class UacOfficeServiceImpl extends BaseService<UacOffice>implements UacOf
                 getsub(i.getId(),ids);
             }
         }
+    }*/
+    @ApiOperation(value = "获得全部机构")
+    @Override
+    public Map listAsT() {
+        List<UacOffice> list = uacOfficeMapper.getAll();
+        Map map = BuildTree(list);
+        return map;
+    }
+
+    @ApiOperation(value = "获得全部机构")
+    @Override
+    public List<UacOffice> listAll() {
+        List<UacOffice> list = uacOfficeMapper.getAll();
+        return list;
+    }
+
+    public  Map BuildTree(List<UacOffice> l){
+        String root = "0";
+        Map map = new HashMap<String,List<String>>();
+        build(root,map);
+        return map;
+    }
+
+    private void build(String root,Map map ) {
+        List<UacOffice> ch = uacOfficeMapper.getchildren(root);
+        map.put(root,ch);
+        for(int i = 0;i<ch.size();i++){
+            build(ch.get(i).getId(),map);
+        }
+    }
+
+    @ApiOperation(value = "对机构进行排序")
+    public void sort(List<UacOffice> l){
+        Collections.sort(l, new Comparator<UacOffice>() {
+            @Override
+            public int compare(UacOffice o1, UacOffice o2) {
+                return o1.getSort().compareTo(o2.getSort());
+            }
+        });
     }
 }

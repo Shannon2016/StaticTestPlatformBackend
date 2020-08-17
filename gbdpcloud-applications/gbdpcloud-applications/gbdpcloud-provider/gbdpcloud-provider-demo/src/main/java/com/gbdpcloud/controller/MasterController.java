@@ -1,5 +1,7 @@
 package com.gbdpcloud.controller;
 
+import com.alibaba.excel.EasyExcel;
+import com.gbdpcloud.Xls.TestCompXls;
 import com.gbdpcloud.entity.*;
 import com.gbdpcloud.service.*;
 import gbdpcloudcommonbase.gbdpcloudcommonbase.core.BaseController;
@@ -15,11 +17,16 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.Socket;
+import java.net.URLEncoder;
 import java.util.*;
 
 @Api(value = "MasterController")
@@ -464,6 +471,108 @@ public class MasterController extends BaseController {
         list.add(code);
         return ResultGenerator.genSuccessResult(list);
     }*/
+  @CrossOrigin(origins = {"http://localhost:9527", "null"})
+  @ApiOperation("我的项目-分析结果-对比分析")
+  @GetMapping("/project/com/{oid}/{nid}")
+  public Result com(@PathVariable @Valid String oid, @PathVariable @Valid  String nid){
+      List<ResultErr> old = resultErrService.getByTest(oid);
+      List<ResultErr> n = resultErrService.getByTest(nid);
+      comp(old,n);
+      return ResultGenerator.genSuccessResult(n);
+  }
+    @ApiOperation("分析结果的对比")
+    public void comp(List<ResultErr> old,List<ResultErr> n){
+        for (ResultErr r :n){
+            boolean flag = false;
+            for (ResultErr o:old){
+                if(r.getSource().equals(o.getSource()) && r.getFunction().equals(o.getFunction())
+                        && r.getRule().equals(o.getRule())  && r.getType().equals(r.getType())){
+                    r.setCompVsersion(o.getTest_ID());
+                    r.setCompLine(o.getLine());
+                    r.setCompResult(getCompR(r,o));
+                    flag = true;
+                }
+            }
+            if(!flag){
+                r.setCompResult("新增");
+                r.setCompVsersion("--");
+                r.setCompLine("--");
+            }
+        }
+    }
+    @CrossOrigin(origins = {"http://localhost:9527", "null"})
+    @ApiOperation("获得对比结果的Xls")
+    @GetMapping("/project/comXls/{oid}/{nid}")
+    public void getCompXls(@PathVariable @Valid String oid, @PathVariable @Valid  String nid,HttpServletResponse response) throws IOException {
+        List<ResultErr> old = resultErrService.getByTest(oid);
+        List<ResultErr> n = resultErrService.getByTest(nid);
+        comp(old,n);
+
+        List<TestCompXls> xlslist = new ArrayList<TestCompXls>();
+        for (int i =0;i<n.size();i++){
+            xlslist.add(new TestCompXls(n.get(i)));
+        }
+        response.setContentType("application/vnd.ms-excel");
+        response.setCharacterEncoding("utf-8");
+        // 这里URLEncoder.encode可以防止中文乱码 当然和easyexcel没有关系
+        String fileName = URLEncoder.encode("测试", "UTF-8");
+        response.setHeader("Content-disposition", "attachment;filename=" + fileName + ".xlsx");
+        EasyExcel.write(response.getOutputStream(), TestCompXls.class).sheet("模板").doWrite(xlslist);
+    }
+
+    @ApiOperation("获得两个错误的对比结果")
+    private String getCompR(ResultErr r, ResultErr o) {
+        return "消除/不同";
+    }
+
+    @CrossOrigin(origins = {"http://localhost:9527", "null"})
+    @PostMapping("/project/getCode")
+    @ApiOperation("我的项目-分析结果-对比分析Code")
+    public Result getCode(@RequestParam @Valid String pid, @RequestParam @Valid String version1,
+                          @RequestParam @Valid String version2, @RequestParam @Valid String name){
+        Code code1 = codeService.getByProjectVserionAndName(pid,version1,name);
+        Code code2 = codeService.getByProjectVserionAndName(pid,version2,name);
+        try {
+            //code1.setSource_code();
+            code1.setContent(readFile(code1.getPath()));
+            code2.setContent(readFile(code2.getPath()));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        List<Code> list = new ArrayList<Code>();
+        list.add(code1);
+        list.add(code2);
+        return ResultGenerator.genSuccessResult(list);
+    }
+
+
+    @ApiOperation("文件转String")
+    public String readFile(String path) throws IOException {
+        File file = new File(path);
+        FileReader fileReader = new FileReader(file);
+        BufferedReader br = new BufferedReader(fileReader);
+        StringBuilder sb = new StringBuilder();
+        String temp = "";
+        while ((temp = br.readLine()) != null) {
+            sb.append(temp + "\n");
+        }
+        br.close();
+        return sb.toString();
+    }
+    @CrossOrigin(origins = {"http://localhost:9527", "null"})
+    @GetMapping("/project/testFile")
+    public Result testFile(){
+        Code code = new Code();
+        code.setPath("D://1.txt");
+        try {
+            code.setContent(readFile(code.getPath()));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        List<Code> list = new ArrayList<Code>();
+        list.add(code);
+        return ResultGenerator.genSuccessResult(list);
+    }
 
 }
 

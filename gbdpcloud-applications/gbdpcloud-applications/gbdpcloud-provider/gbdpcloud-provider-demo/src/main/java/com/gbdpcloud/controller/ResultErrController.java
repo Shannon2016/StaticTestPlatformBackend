@@ -31,6 +31,7 @@ public class ResultErrController extends BaseController {
     @Resource
     private ResultErrService resultErrService;
 
+    @CrossOrigin(origins = {"http://localhost:9527", "null"})
     @ApiOperation(value = "修改备注")
     @PutMapping("/update")
     @CrossOrigin(origins = {"http://localhost:9527", "null"})
@@ -43,17 +44,18 @@ public class ResultErrController extends BaseController {
     /*
   0813 add by ld
  */
+    @CrossOrigin(origins = {"http://localhost:9527", "null"})
     @ApiOperation(value = "问题排序 order:0从小到大,1从大到小")
     @PostMapping("/sort")
     @CrossOrigin(origins = {"http://localhost:9527", "null"})
     public Result sort(@RequestParam("order") int order,@RequestParam("sortBy") int sortBy,
-                           @RequestParam("testId") String testId){
+                       @RequestParam("testId") String testId){
 
         List<ResultErr> list = resultErrService.getByTest(testId);
         resultErrService.sort(order,sortBy,list);
         return ResultGenerator.genSuccessResult(list);
     }
-
+    @CrossOrigin(origins = {"http://localhost:9527", "null"})
     @PostMapping("/Testsort")
     public Result testSort(){
         ResultErr r1 = new ResultErr();
@@ -70,6 +72,7 @@ public class ResultErrController extends BaseController {
         return ResultGenerator.genSuccessResult(list);
     }
 
+    @CrossOrigin(origins = {"http://localhost:9527", "null"})
     @ApiOperation(value = "下载xls")
     @PostMapping("/xls-one")
     public void download( @RequestParam("testId") String testId,HttpServletResponse response) throws IOException {
@@ -86,7 +89,7 @@ public class ResultErrController extends BaseController {
         response.setHeader("Content-disposition", "attachment;filename=" + fileName + ".xlsx");
         EasyExcel.write(response.getOutputStream(), TestXls.class).sheet("模板").doWrite(xlslist);
     }
-
+    @CrossOrigin(origins = {"http://localhost:9527", "null"})
     @PostMapping("/test-xls")
     public void testDownload(HttpServletResponse response) throws IOException {
         //List<ResultErr> list = resultErrService.getByTest(testId);
@@ -121,5 +124,6 @@ public class ResultErrController extends BaseController {
         System.out.print(list);
         return list;
     }
+
 
 }

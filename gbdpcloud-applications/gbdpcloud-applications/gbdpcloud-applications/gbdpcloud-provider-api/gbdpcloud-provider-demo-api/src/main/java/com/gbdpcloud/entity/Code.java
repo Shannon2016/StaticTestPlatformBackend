@@ -84,4 +84,6 @@ public class Code extends BaseEntity {
 	@ApiModelProperty(value = "代码文件")
 	@Column(name = "path", nullable = true, length = 255)
 	private String path;
+
+	private String content;
 }

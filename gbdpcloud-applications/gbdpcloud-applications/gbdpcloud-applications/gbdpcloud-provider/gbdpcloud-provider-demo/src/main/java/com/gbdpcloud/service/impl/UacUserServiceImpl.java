@@ -1,15 +1,16 @@
 package com.gbdpcloud.service.impl;
 
-import com.gbdpcloud.entity.*;
+
 import com.gbdpcloud.mapper.*;
 import com.gbdpcloud.service.UacUserService;
 import gbdpcloudcommonbase.gbdpcloudcommonbase.core.BaseService;
-import gbdpcloudprovideruserapi.gbdpcloudprovideruserapi.model.UacRoleUser;
+import gbdpcloudprovideruserapi.gbdpcloudprovideruserapi.model.UacOffice;
 import gbdpcloudprovideruserapi.gbdpcloudprovideruserapi.model.UacUser;
-import gbdpcloudprovideruserapi.gbdpcloudprovideruserapi.model.UacUserOffice;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import tk.mybatis.mapper.entity.Condition;
+import tk.mybatis.mapper.entity.Example;
 
 import javax.annotation.Resource;
 import java.util.Date;
@@ -46,9 +47,11 @@ public class UacUserServiceImpl extends BaseService<UacUser> implements UacUserS
     }
     @ApiOperation(value = "获得用户的role和office")
     public  UacUser getALlInfo(UacUser u){
-        UacRoleUser uru = new UacRoleUser();
+        return u;
+        /*
+              UacRoleUser uru = new UacRoleUser();
         uru.setUserId(u.getId());
-        UacRoleUser tt =  uacRoleUserMapper.selectOne(uru);
+        UacRoleUser tt =  uacRoleUserMapper.select(uru).get(0);
         String roleName = uacRoleMapper.get( tt.getRoleId() ).getName();
         //u.setRoleName(roleName);
 
@@ -59,6 +62,7 @@ public class UacUserServiceImpl extends BaseService<UacUser> implements UacUserS
             //u.setOfficeName(uacOfficeMapper.get( off.getOffice_id() ).getName());
         }
         return u;
+         */
     }
 
 
@@ -74,10 +78,13 @@ public class UacUserServiceImpl extends BaseService<UacUser> implements UacUserS
     @ApiOperation(value = "更新用户信息")
     @Override
     public int updateInfo(UacUser uacUser,String id) {
+        /*
         UacUser old = getById(uacUser.getId());
-        if(!old.getPassword().equals(uacUser.getPassword())){
+                if(!old.getPassword().equals(uacUser.getPassword())){
             uacUser.setIsChangedPwd(1);
         }
+         */
+
         /*if(null != uacUser.getOffice_name()){
             UacOffice toff = new UacOffice();
             toff.setName(uacUser.getOffice_name());
@@ -101,22 +108,37 @@ public class UacUserServiceImpl extends BaseService<UacUser> implements UacUserS
 
     @ApiOperation(value = "添加用户")
     @Override
-    public int addU(UacUser uacUser,String id) {
-       // uacUser.setCreate_by(id);
-        uacUser.setCreateDate(new Date());
+    public int addU(UacUser uacUser,String office,String id) {
+        // uacUser.setCreate_by(id);
+        //uacUser.setCreateDate(new Date());
+        uacUser.setUacOffice(getOff(office));
+        addUserInfo(uacUser);
         return save(uacUser);
+
     }
 
-
+    public void addUserInfo(UacUser u){
+        u.setPhone("13900000000");
+        u.setEmail("1234567890@qq.com");
+        if(null == u.getPassword()){
+            u.setPassword("1234");
+        }
+    }
 
     @ApiOperation(value = "批量添加用户")
-    public int addList(List<UacUser> list, String id){
+    public int addList(List<UacUser> list, String office ,String id){
 
         for(UacUser u :list){
-           // u.setCreateby(id);
-            u.setCreateDate(new Date());
+            addUserInfo(u);
+            // u.setCreateby(id);
+            u.setUacOffice(getOff(office));
+            //u.setCreateDate(new Date());
         }
-       return  saveBatch(list);
+        return  saveBatch(list);
+    }
+
+    public UacOffice getOff(String name){
+        return uacOfficeMapper.selectByname(name).get(0);
     }
 
 

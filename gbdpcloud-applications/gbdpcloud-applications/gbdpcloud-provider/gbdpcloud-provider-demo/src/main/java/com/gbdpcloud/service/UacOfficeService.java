@@ -6,6 +6,7 @@ import io.swagger.annotations.ApiOperation;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Map;
 
 public interface UacOfficeService extends Service<UacOffice> {
 
@@ -20,4 +21,6 @@ public interface UacOfficeService extends Service<UacOffice> {
 
     @ApiOperation(value = "获得机构列表")
     public List<UacOffice> listAll();
+
+    public Map listAsT();
 }

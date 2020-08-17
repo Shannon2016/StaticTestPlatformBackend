@@ -11,7 +11,7 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 @EnableFeignClients("gbdpcloudprovideruserapi.gbdpcloudprovideruserapi")
 @SecurityCoreConfig
 public class GbdpcloudProviderDemoApplication {
-
+//test
     public static void main(String[] args) {
         SpringApplication.run(GbdpcloudProviderDemoApplication.class, args);
     }

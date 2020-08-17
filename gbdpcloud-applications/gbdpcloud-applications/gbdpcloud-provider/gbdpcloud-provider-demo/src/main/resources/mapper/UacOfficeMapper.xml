@@ -56,4 +56,24 @@
         WHERE id IN (#{ids})
     </update>
 
+
+  <select id="selectByname" parameterType="String" resultMap="BaseResultMap">
+    SELECT *
+    from uac_office
+    where name = #{name} and del_flag = '0'
+  </select>
+
+  <select id="getAll" resultMap="BaseResultMap">
+    SELECT *
+    from uac_office
+    WHERE del_flag = '0'
+  </select>
+
+
+  <select id="getchildren" parameterType="String" resultMap="BaseResultMap">
+    SELECT *
+    from uac_office
+    where parent_id = #{pid} and del_flag = '0'
+  </select>
+
 </mapper>

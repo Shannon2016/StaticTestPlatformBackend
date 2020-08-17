@@ -1,5 +1,7 @@
 package com.gbdpcloud.controller;
 
+import com.alibaba.excel.EasyExcel;
+import com.gbdpcloud.Xls.TestCompXls;
 import com.gbdpcloud.entity.*;
 import com.gbdpcloud.service.*;
 import gbdpcloudcommonbase.gbdpcloudcommonbase.core.BaseController;
@@ -15,11 +17,16 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.Socket;
+import java.net.URLEncoder;
 import java.util.*;
 
 @Api(value = "MasterController")
@@ -354,14 +361,15 @@ public class MasterController extends BaseController {
     主要用到testservice,codeService,resulterrService,resulterrController
 我是提醒你别用那个类，直接从test_id拿到List<ResultErr>
      */
-    /*@ApiOperation("我的项目-分析结果-对比分析")
-    @GetMapping("/project/com/{oid}/{nid}")
-    public Result com(@PathVariable @Valid String oid, @PathVariable @Valid  String nid){
-        List<ResultErr> old = resultErrService.getByTest(oid);
-        List<ResultErr> n = resultErrService.getByTest(nid);
-        comp(old,n);
-        return ResultGenerator.genSuccessResult(n);
-    }
+  @CrossOrigin(origins = {"http://localhost:9527", "null"})
+  @ApiOperation("我的项目-分析结果-对比分析")
+  @GetMapping("/project/com/{oid}/{nid}")
+  public Result com(@PathVariable @Valid String oid, @PathVariable @Valid  String nid){
+      List<ResultErr> old = resultErrService.getByTest(oid);
+      List<ResultErr> n = resultErrService.getByTest(nid);
+      comp(old,n);
+      return ResultGenerator.genSuccessResult(n);
+  }
     @ApiOperation("分析结果的对比")
     public void comp(List<ResultErr> old,List<ResultErr> n){
         for (ResultErr r :n){
@@ -382,7 +390,7 @@ public class MasterController extends BaseController {
             }
         }
     }
-
+    @CrossOrigin(origins = {"http://localhost:9527", "null"})
     @ApiOperation("获得对比结果的Xls")
     @GetMapping("/project/comXls/{oid}/{nid}")
     public void getCompXls(@PathVariable @Valid String oid, @PathVariable @Valid  String nid,HttpServletResponse response) throws IOException {
@@ -407,7 +415,7 @@ public class MasterController extends BaseController {
         return "消除/不同";
     }
 
-
+    @CrossOrigin(origins = {"http://localhost:9527", "null"})
     @PostMapping("/project/getCode")
     @ApiOperation("我的项目-分析结果-对比分析Code")
     public Result getCode(@RequestParam @Valid String pid, @RequestParam @Valid String version1,
@@ -415,6 +423,7 @@ public class MasterController extends BaseController {
         Code code1 = codeService.getByProjectVserionAndName(pid,version1,name);
         Code code2 = codeService.getByProjectVserionAndName(pid,version2,name);
         try {
+            //code1.setSource_code();
             code1.setContent(readFile(code1.getPath()));
             code2.setContent(readFile(code2.getPath()));
         } catch (IOException e) {
@@ -440,10 +449,11 @@ public class MasterController extends BaseController {
         br.close();
         return sb.toString();
     }
+    @CrossOrigin(origins = {"http://localhost:9527", "null"})
     @GetMapping("/project/testFile")
     public Result testFile(){
-         Code code = new Code();
-         code.setPath("D://1.txt");
+        Code code = new Code();
+        code.setPath("D://1.txt");
         try {
             code.setContent(readFile(code.getPath()));
         } catch (IOException e) {
@@ -452,7 +462,7 @@ public class MasterController extends BaseController {
         List<Code> list = new ArrayList<Code>();
         list.add(code);
         return ResultGenerator.genSuccessResult(list);
-    }*/
+    }
 
 }
 
