@@ -8,10 +8,7 @@ import gbdpcloudcommonbase.gbdpcloudcommonbase.httpResult.ResultGenerator;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;
@@ -26,6 +23,7 @@ public class TestController extends BaseController {
     private TestService testService;
 
     @ApiOperation(value = "添加测试计划")
+    @CrossOrigin(origins = {"http://localhost:9527", "null"})
     @PostMapping("/add")
     public Result save(@RequestBody @Valid Test test) {
         log.info("TestController save [{}]", test);

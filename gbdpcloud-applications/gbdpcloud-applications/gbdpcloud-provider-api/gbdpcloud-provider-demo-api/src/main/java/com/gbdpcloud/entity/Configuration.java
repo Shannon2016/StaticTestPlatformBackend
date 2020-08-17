@@ -58,9 +58,9 @@ public class Configuration extends BaseEntity {
 	 * nullable : true
 	 * default  : null
 	 */
-	@ApiModelProperty(value = "分析配置")
-	@Column(name = "analyze", nullable = true, length = 255)
-	private String analyze;
+//	@ApiModelProperty(value = "分析配置")
+//	@Column(name = "analyze", nullable = true, length = 255)
+//	private String analyze;
 
 	/**
 	 * 硬件平台

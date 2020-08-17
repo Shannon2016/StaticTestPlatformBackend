@@ -87,6 +87,7 @@ public class ResultErrController extends BaseController {
         response.setHeader("Content-disposition", "attachment;filename=" + fileName + ".xlsx");
         EasyExcel.write(response.getOutputStream(), TestXls.class).sheet("模板").doWrite(xlslist);
     }
+
     @CrossOrigin(origins = {"http://localhost:9527", "null"})
     @PostMapping("/test-xls")
     public void testDownload(HttpServletResponse response) throws IOException {

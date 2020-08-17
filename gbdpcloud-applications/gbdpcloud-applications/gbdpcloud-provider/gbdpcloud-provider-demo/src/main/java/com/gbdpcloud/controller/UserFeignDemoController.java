@@ -30,12 +30,14 @@ public class UserFeignDemoController extends BaseController {
     private UserService userService;
 
     @ApiOperation(value = "查询用户")
+    @CrossOrigin(origins = {"http://localhost:9527", "null"})
     @GetMapping("/user/{id}")
     public Result getUser(@PathVariable String id) {
         return userService.get(id);
     }
 
     @ApiOperation(value = "查询菜单")
+    @CrossOrigin(origins = {"http://localhost:9527", "null"})
     @GetMapping("/menu")
     public Result listMenu() {
         return menuService.listAll();

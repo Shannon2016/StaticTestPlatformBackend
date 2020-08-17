@@ -88,6 +88,7 @@ public class UacOfficeController extends BaseController {
         }
         return r;
     }
+
     @CrossOrigin(origins = {"http://localhost:9527", "null"})
     @GetMapping("/list")
     @ApiOperation(value = "获得机构列表")

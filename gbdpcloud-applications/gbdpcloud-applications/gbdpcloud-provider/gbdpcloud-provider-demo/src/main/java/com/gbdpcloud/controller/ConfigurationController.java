@@ -47,6 +47,7 @@ public class ConfigurationController extends BaseController {
     }
 
     @ApiOperation(value = "查看公共方案")
+    @CrossOrigin(origins = {"http://localhost:9527", "null"})
     @GetMapping("/getCommon")
     public Result getCommon(){
         List<Configuration> list=configurationService.getCommon();
@@ -54,6 +55,7 @@ public class ConfigurationController extends BaseController {
     }
 
     @ApiOperation(value = "查看个人方案")
+    @CrossOrigin(origins = {"http://localhost:9527", "null"})
     @GetMapping("/getPrivate")
     public Result getPrivate(){
         UacUserDto user= UacUserUtils.getUserInfoFromRequest();
@@ -63,6 +65,7 @@ public class ConfigurationController extends BaseController {
     }
 
     @ApiOperation(value = "添加方案")
+    @CrossOrigin(origins = {"http://localhost:9527", "null"})
     @PostMapping("/add")
     public Result save(@RequestParam(value = "name")String name,
                        @RequestParam(value = "tools")String tools,
@@ -134,6 +137,7 @@ public class ConfigurationController extends BaseController {
     }
 
     @ApiOperation(value = "更新方案")
+    @CrossOrigin(origins = {"http://localhost:9527", "null"})
     @PutMapping("/update")
     public Result update(@RequestBody @Valid Configuration configuration,
                          @RequestParam(required = false,value = "header") MultipartFile header,
@@ -219,6 +223,7 @@ public class ConfigurationController extends BaseController {
     }
 
     @ApiOperation(value = "删除单个方案")
+    @CrossOrigin(origins = {"http://localhost:9527", "null"})
     @DeleteMapping("/delete/{id}")
     public Result delete(@PathVariable @Valid @NotBlank(message = "配置方案id不能为空") String id) {
         log.info("ConfigurationController delete [{}]", id);
@@ -250,6 +255,7 @@ public class ConfigurationController extends BaseController {
     }
 
     @ApiOperation(value = "设为默认方案")
+    @CrossOrigin(origins = {"http://localhost:9527", "null"})
     @PutMapping("setDefault/{id}")
     public Result setDefault(@PathVariable @Valid @NotBlank(message = "配置方案id不能为空") String id){
         Configuration con=configurationService.getById(id);
@@ -259,6 +265,7 @@ public class ConfigurationController extends BaseController {
     }
 
     @ApiOperation(value = "取消默认方案")
+    @CrossOrigin(origins = {"http://localhost:9527", "null"})
     @PutMapping("removeDefault/{id}")
     public Result removeDefault(@PathVariable @Valid @NotBlank(message = "配置方案id不能为空") String id){
         Configuration con=configurationService.getById(id);
@@ -268,6 +275,7 @@ public class ConfigurationController extends BaseController {
     }
 
     @ApiOperation(value = "复制方案")
+    @CrossOrigin(origins = {"http://localhost:9527", "null"})
     @PostMapping("copy/{id}")
     public Result copy(@PathVariable @Valid @NotBlank(message = "配置方案id不能为空") String id){
 

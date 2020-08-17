@@ -6,7 +6,7 @@
     <result column="name" jdbcType="VARCHAR" property="name" />
     <result column="tools" jdbcType="VARCHAR" property="tools" />
     <result column="rule" jdbcType="VARCHAR" property="rule" />
-    <result column="analyze" jdbcType="VARCHAR" property="analyze" />
+<!--    <result column="analyze" jdbcType="VARCHAR" property="analyze" />-->
     <result column="platform" jdbcType="VARCHAR" property="platform" />
     <result column="translater" jdbcType="VARCHAR" property="translater" />
     <result column="header" jdbcType="VARCHAR" property="header" />
@@ -20,8 +20,10 @@
     <result column="remarks" property="remarks" jdbcType="VARCHAR"/>
     <result column="del_flag" property="delFlag" jdbcType="CHAR"/>
   </resultMap>
+
+<!--  去掉了analyze列-->
   <sql id="Base_Column_List">
-    id,name, tools, rule, analyze, platform, translater, header, define, create_date, update_date,
+    id,name, tools, rule, platform, translater, header, define, create_date, update_date,
     create_by, update_by, is_default, is_common, remarks, del_flag
   </sql>
 
