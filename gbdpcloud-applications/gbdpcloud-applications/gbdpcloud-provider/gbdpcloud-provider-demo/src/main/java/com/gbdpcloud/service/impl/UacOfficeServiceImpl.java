@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import javax.validation.Valid;
 import java.util.*;
 
 @Service
@@ -18,20 +19,16 @@ public class UacOfficeServiceImpl extends BaseService<UacOffice>implements UacOf
     private UacOfficeMapper uacOfficeMapper;
 
 
-    /*@ApiOperation(value = "新增机构")
-    @Override
+    @ApiOperation(value = "新增机构")
+
     public int add(@Valid UacOffice uacOffice, String id) {
-        String  pid = uacOffice.getParent_id();
-        uacOffice.setParent_ids(getById(pid).getParent_ids()+","+pid);
-        uacOffice.setCreate_by(id);
-        uacOffice.setCreateDate(new Date());
+        String  pid = uacOffice.getParentId();
+        uacOffice.setParentIds(getById(pid).getParentIds()+","+pid);
         return save(uacOffice);
     }
 
     @ApiOperation(value = "更新机构信息")
     public int updateInfo(@Valid UacOffice uacOffice,String id) {
-        uacOffice.setUpdate_by(id);
-        uacOffice.setUpdateDate(new Date());
         return update(uacOffice);
     }
     @ApiOperation(value = "级联删除机构")
@@ -55,6 +52,12 @@ public class UacOfficeServiceImpl extends BaseService<UacOffice>implements UacOf
         return list;
     }
 
+    public List<UacOffice> getByIds(List<String> ids)
+    {
+        return uacOfficeMapper.getByIds(ids);
+    }
+
+
     @ApiOperation(value = "对机构进行排序")
     public void sort(List<UacOffice> l){
         Collections.sort(l, new Comparator<UacOffice>() {
@@ -68,7 +71,7 @@ public class UacOfficeServiceImpl extends BaseService<UacOffice>implements UacOf
     @ApiOperation(value = "查找某节点的全部子节点")
     public void getsub(String id,List<String> ids){
         UacOffice u = new UacOffice();
-        u.setParent_id(id);
+        u.setParentId(id);
         List<UacOffice> list = list(u);
         if(list.size() >0){
             for(UacOffice i :list){

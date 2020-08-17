@@ -64,25 +64,31 @@ public class ConfigurationController extends BaseController {
         return ResultGenerator.genSuccessResult(list);
     }
 
+
     @ApiOperation(value = "添加方案")
-    @CrossOrigin(origins = {"http://localhost:9527", "null"})
     @PostMapping("/add")
-    public Result save(@RequestParam(value = "name")String name,
-                       @RequestParam(value = "tools")String tools,
-                       @RequestParam(value = "rule")String rule,
-                       @RequestParam(value = "is_common")String is_common,
-                       @RequestParam(value = "header") MultipartFile header,
-                       @RequestParam(value = "define")MultipartFile [] define)  {
+    public Result save(@RequestParam(value = "name") String name,
+                       @RequestParam(value = "tools") String tools,
+                       @RequestParam(value = "rule") String rule,
+                       @RequestParam(required = false,value = "is_common") String is_common,
+                       @RequestParam(required = false,value = "header") MultipartFile header,
+                       @RequestParam(required = false,value = "define")MultipartFile [] define)  {
+
         Configuration configuration=new Configuration();
         configuration.setName(name);
-        configuration.setIs_common(is_common);
-        configuration.setTools(tools);
         configuration.setRule(rule);
+        configuration.setTools(tools);
+        if(is_common!=null)
+        {
+            configuration.setIs_common(is_common);
+        }else
+        {
+            configuration.setIs_common("0");
+        }
         configuration.setId(UUID.randomUUID().toString());
         configuration.setDelFlag("0");
         configuration.setIs_default("0");
         log.info("ConfigurationController save [{}]", configuration);
-        //TODO:上传文件
         String basePath=Base_PATH+configuration.getId()+"/"+"header"+"/";
         if(header==null)
         {
@@ -121,7 +127,7 @@ public class ConfigurationController extends BaseController {
             File dest1 = new File(Path);
             try {
                 file.transferTo(dest1);
-                paths=paths+Path+";";
+                paths=paths+Path+",";
 
             }catch (IOException e){
 

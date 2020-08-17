@@ -1,11 +1,14 @@
 package com.gbdpcloud.service.impl;
 
 
+import com.gbdpcloud.entity.*;
 import com.gbdpcloud.mapper.*;
 import com.gbdpcloud.service.UacUserService;
 import gbdpcloudcommonbase.gbdpcloudcommonbase.core.BaseService;
 import gbdpcloudprovideruserapi.gbdpcloudprovideruserapi.model.UacOffice;
+import gbdpcloudprovideruserapi.gbdpcloudprovideruserapi.model.UacRoleUser;
 import gbdpcloudprovideruserapi.gbdpcloudprovideruserapi.model.UacUser;
+import gbdpcloudprovideruserapi.gbdpcloudprovideruserapi.model.UacUserOffice;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
