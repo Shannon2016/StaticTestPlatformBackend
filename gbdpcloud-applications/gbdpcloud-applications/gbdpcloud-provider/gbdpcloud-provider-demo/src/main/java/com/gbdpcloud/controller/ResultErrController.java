@@ -34,6 +34,7 @@ public class ResultErrController extends BaseController {
     @CrossOrigin(origins = {"http://localhost:9527", "null"})
     @ApiOperation(value = "修改备注")
     @PutMapping("/update")
+    @CrossOrigin(origins = {"http://localhost:9527", "null"})
     public Result remark(@RequestBody @Valid ResultErr resultErr){
         log.info("ResultErrController update [{}]", resultErr);
         int i=resultErrService.update(resultErr);
@@ -46,6 +47,7 @@ public class ResultErrController extends BaseController {
     @CrossOrigin(origins = {"http://localhost:9527", "null"})
     @ApiOperation(value = "问题排序 order:0从小到大,1从大到小")
     @PostMapping("/sort")
+    @CrossOrigin(origins = {"http://localhost:9527", "null"})
     public Result sort(@RequestParam("order") int order,@RequestParam("sortBy") int sortBy,
                        @RequestParam("testId") String testId){
 
