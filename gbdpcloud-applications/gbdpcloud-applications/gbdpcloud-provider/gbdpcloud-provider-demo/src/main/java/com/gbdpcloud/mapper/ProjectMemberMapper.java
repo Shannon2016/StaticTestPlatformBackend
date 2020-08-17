@@ -12,4 +12,6 @@ public interface ProjectMemberMapper extends IMapper<ProjectMember> {
     int deleteManyIds(List<String> list);
 
     List<ProjectMember> selectByProjectID(String id);
+
+    List<ProjectMember> getByMember(String id);
 }

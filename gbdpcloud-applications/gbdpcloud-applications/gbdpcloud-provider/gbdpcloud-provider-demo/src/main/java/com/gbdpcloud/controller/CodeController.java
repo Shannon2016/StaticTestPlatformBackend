@@ -25,7 +25,7 @@ import java.util.List;
 @RestController
 public class CodeController extends BaseController {
 
-    public String BASE_PATH="F:/Project";
+    public String BASE_PATH="F:/Project/";
     @Resource
     private CodeService codeService;
 
@@ -42,19 +42,12 @@ public class CodeController extends BaseController {
         }
     }
 
-    @GetMapping("/test/{id}")
-    public Result test(@PathVariable @Valid String id)
-    {
-        return ResultGenerator.genSuccessResult(id);
-    }
-
-
 
     @ApiOperation(value = "上传代码")
     @PostMapping("/add")
     public Result addCode(@RequestParam(value = "project_id") String project_id,
                           @RequestParam(value = "version") String version,
-                          MultipartFile[] files){
+                          @RequestParam(value = "code") MultipartFile[] files){
 
         List<CodeVersion> list=codeVersionService.getByProject(project_id);
         int is_exist=0;

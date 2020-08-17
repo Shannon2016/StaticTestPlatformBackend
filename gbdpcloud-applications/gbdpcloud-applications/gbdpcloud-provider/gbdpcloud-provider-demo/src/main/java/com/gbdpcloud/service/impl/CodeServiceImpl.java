@@ -27,31 +27,18 @@ public class CodeServiceImpl extends BaseService<Code> implements CodeService {
     @Override
     public List<Code> getByProject(String id) {
 
-        Code code=new Code();
-        code.setProject_ID(id);
-        return codeMapper.select(code);
+        return codeMapper.getByProject(id);
     }
 
     @Override
     public List<Code> getByProjectAndVersion(String id, String version) {
-        Code code=new Code();
-        code.setProject_ID(id);
-        code.setVersion(version);
-        return codeMapper.select(code);
+
+        return codeMapper.getByProjectAndVersion(id,version);
     }
 
     @Override
     public List<Code> getByCodeVersion(String id) {
-        Code code=new Code();
-        code.setCode_version_ID(id);
-        return codeMapper.select(code);
-    }
-    @Override
-    public Code getByProjectVserionAndName(@Valid String pid, @Valid String version1, @Valid String name) {
-        Code code = new Code();
-        code.setCode_version_ID(version1);
-        code.setProject_ID(pid);
-        code.setName(name);
-        return codeMapper.selectProjectVserionAndName(pid, version1, name).get(0);
+
+        return codeMapper.getByCodeVersion(id);
     }
 }

@@ -24,9 +24,7 @@ public class TestServiceImpl extends BaseService<Test> implements TestService {
 
     @Override
     public List<Test> getByProject(String id) {
-        Test test=new Test();
-        test.setProject_ID(id);
-       List<Test> list = testMapper.select(test);
+       List<Test> list = testMapper.getByProject(id);
        return list;
     }
 }

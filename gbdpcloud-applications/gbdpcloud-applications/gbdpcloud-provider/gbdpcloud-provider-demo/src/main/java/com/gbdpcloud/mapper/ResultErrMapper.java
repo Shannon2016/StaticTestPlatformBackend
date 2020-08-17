@@ -8,4 +8,6 @@ import java.util.List;
 @Mapper
 public interface ResultErrMapper extends IMapper<ResultErr> {
     List<ResultErr> selectByTestID(String id);
+
+    List<ResultErr> getByTest(String id);
 }

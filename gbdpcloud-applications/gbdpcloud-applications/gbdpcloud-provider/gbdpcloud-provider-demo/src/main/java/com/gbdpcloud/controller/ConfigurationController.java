@@ -10,6 +10,7 @@ import gbdpcloudcommonbase.gbdpcloudcommonbase.httpResult.ResultGenerator;
 import gbdpcloudcommonbase.gbdpcloudcommonbase.security.UacUserUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.apache.ibatis.annotations.Update;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -19,6 +20,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -47,7 +49,6 @@ public class ConfigurationController extends BaseController {
     }
 
     @ApiOperation(value = "查看公共方案")
-    @CrossOrigin(origins = {"http://localhost:9527", "null"})
     @GetMapping("/getCommon")
     public Result getCommon(){
         List<Configuration> list=configurationService.getCommon();
@@ -55,7 +56,6 @@ public class ConfigurationController extends BaseController {
     }
 
     @ApiOperation(value = "查看个人方案")
-    @CrossOrigin(origins = {"http://localhost:9527", "null"})
     @GetMapping("/getPrivate")
     public Result getPrivate(){
         UacUserDto user= UacUserUtils.getUserInfoFromRequest();
@@ -131,20 +131,33 @@ public class ConfigurationController extends BaseController {
 
         configuration.setDefine(paths.substring(0,paths.length()-1));
 
-        int i = configurationService.saveOrUpdate(configuration);
+        int i = configurationService.save(configuration);
 
         return i > 0 ? ResultGenerator.genSuccessResult() : ResultGenerator.genFailResult("添加失败！");
     }
 
     @ApiOperation(value = "更新方案")
-    @CrossOrigin(origins = {"http://localhost:9527", "null"})
     @PutMapping("/update")
-    public Result update(@RequestBody @Valid Configuration configuration,
-                         @RequestParam(required = false,value = "header") MultipartFile header,
-                         @RequestParam(required = false,value = "define")MultipartFile [] define) {
+    public Result update(
+            @RequestParam(value = "id") String id,
+            @RequestParam(required = false,value = "name") String name,
+            @RequestParam(required = false,value = "tools") String tools,
+            @RequestParam(required = false,value = "rule") String rule,
+            @RequestParam(required = false,value = "is_common") String is_common,
+            @RequestParam(required = false,value = "is_default") String is_default,
+            @RequestParam(required = false,value = "header") MultipartFile header,
+            @RequestParam(required = false,value = "define")MultipartFile [] define) {
+
+        Configuration configuration=configurationService.getById(id);
+        configuration.setName(name);
+        configuration.setIs_common(is_common);
+        configuration.setTools(tools);
+        configuration.setRule(rule);
+        configuration.setId(id);
+        configuration.setIs_default(is_default);
         log.info("ConfigurationController update [{}]", configuration);
 
-        String basePath=Base_PATH+configuration.getId()+"/"+"header"+"/";
+       String basePath=Base_PATH+configuration.getId()+"/"+"header"+"/";
 
         if(header!=null)
         {
@@ -188,16 +201,16 @@ public class ConfigurationController extends BaseController {
                 File dest1 = new File(Path);
                 try {
                     file.transferTo(dest1);
-                    paths=paths+Path+";";
+                    paths=paths+Path+",";
 
                 }catch (IOException e){
 
                     ResultGenerator.genFailResult("文件上传失败！");
                 }
             }
-            /*String prePath=configuration.getDefine();
-            String [] prePaths=prePath.split(";");
-            String [] newPaths=paths.split(";");
+            String prePath=configuration.getDefine();
+            String [] prePaths=prePath.split(",");
+            String [] newPaths=paths.split(",");
             List<String> list=new ArrayList<String>();
             for(int i=0;i<newPaths.length;i++)
             {
@@ -213,7 +226,7 @@ public class ConfigurationController extends BaseController {
                         file.delete();
                     }
                 }
-            }*/
+            }
             configuration.setDefine(paths.substring(0,paths.length()-1));
         }
 
@@ -223,12 +236,11 @@ public class ConfigurationController extends BaseController {
     }
 
     @ApiOperation(value = "删除单个方案")
-    @CrossOrigin(origins = {"http://localhost:9527", "null"})
-    @DeleteMapping("/delete/{id}")
+    @PutMapping("/delete/{id}")
     public Result delete(@PathVariable @Valid @NotBlank(message = "配置方案id不能为空") String id) {
         log.info("ConfigurationController delete [{}]", id);
        Configuration con= configurationService.getById(id);
-       String header=con.getHeader();
+      String header=con.getHeader();
        File file=new File(header);
        if(file.exists()&&file.isFile())
        {
@@ -238,7 +250,7 @@ public class ConfigurationController extends BaseController {
            }
        }
        String define=con.getDefine();
-       String [] define1=define.split(";");
+       String [] define1=define.split(",");
        for(int j=0;j<define1.length;j++)
        {
            File f=new File(define1[j]);
@@ -255,7 +267,6 @@ public class ConfigurationController extends BaseController {
     }
 
     @ApiOperation(value = "设为默认方案")
-    @CrossOrigin(origins = {"http://localhost:9527", "null"})
     @PutMapping("setDefault/{id}")
     public Result setDefault(@PathVariable @Valid @NotBlank(message = "配置方案id不能为空") String id){
         Configuration con=configurationService.getById(id);
@@ -265,7 +276,6 @@ public class ConfigurationController extends BaseController {
     }
 
     @ApiOperation(value = "取消默认方案")
-    @CrossOrigin(origins = {"http://localhost:9527", "null"})
     @PutMapping("removeDefault/{id}")
     public Result removeDefault(@PathVariable @Valid @NotBlank(message = "配置方案id不能为空") String id){
         Configuration con=configurationService.getById(id);
@@ -275,7 +285,6 @@ public class ConfigurationController extends BaseController {
     }
 
     @ApiOperation(value = "复制方案")
-    @CrossOrigin(origins = {"http://localhost:9527", "null"})
     @PostMapping("copy/{id}")
     public Result copy(@PathVariable @Valid @NotBlank(message = "配置方案id不能为空") String id){
 

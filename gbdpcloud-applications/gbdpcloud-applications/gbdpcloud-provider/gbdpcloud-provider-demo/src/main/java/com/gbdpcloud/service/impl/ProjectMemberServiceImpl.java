@@ -18,9 +18,8 @@ public class ProjectMemberServiceImpl extends BaseService<ProjectMember> impleme
 
     @Override
     public List<ProjectMember> getByMember(String member_ID) {
-        ProjectMember projectMember=new ProjectMember();
-        projectMember.setMember_ID(member_ID);
-        return projectMemberMapper.select(projectMember);
+
+        return projectMemberMapper.getByMember(member_ID);
     }
 
     @Override

@@ -74,6 +74,11 @@
     SELECT *
     from uac_office
     where parent_id = #{pid} and del_flag = '0'
+  <select id="getByIds" resultMap="BaseResultMap" >
+    SELECT* FROM uac_office WHERE del_flag = '0' AND id in
+    <foreach collection="list" item="id" open="(" close=")" separator=",">
+      #{id}
+    </foreach>
   </select>
 
 </mapper>

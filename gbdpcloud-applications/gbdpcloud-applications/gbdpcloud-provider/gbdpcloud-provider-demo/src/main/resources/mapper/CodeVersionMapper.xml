@@ -19,34 +19,25 @@
 
     <!--过期，仅供参考-->
     <select id="list" resultMap="BaseResultMap" >
-        SELECT
-        <include refid="Base_Column_List"/>
-        FROM code_version t
-        <where>
-            t.del_flag = '0'
-        </where>
+        SELECT* FROM code_version WHERE del_flag = '0'
     </select>
 
     <!--过期，仅供参考-->
     <select id="get" resultMap="BaseResultMap" >
-        SELECT
-        <include refid="Base_Column_List"/>
-        FROM code_version t
-        WHERE t.del_flag = '0'
-        <if test="id != null and id != ''">
-            AND t.id = #{id}
-        </if>
+        SELECT * from code_version WHERE del_flag = '0' and id = #{id}
+    </select>
+
+    <select id="selectByProject" resultMap="BaseResultMap" >
+        SELECT * from code_version WHERE del_flag = '0' and project_ID = #{id}
     </select>
 
     <!--逻辑删除-->
     <update id="deleteByLogic">
-        DELETE code_version
-        WHERE id = #{id}
+        DELETE from code_version WHERE id = #{id}
     </update>
 
     <update id="deleteManyByLogic">
-        DELETE code_version
-        WHERE id IN (#{ids})
+        DELETE from code_version WHERE id IN (#{ids})
     </update>
 
 </mapper>

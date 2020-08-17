@@ -42,7 +42,6 @@ public class ProjectController extends BaseController {
 
 
     @ApiOperation(value = "添加项目")
-    @CrossOrigin(origins = {"http://localhost:9527", "null"})
     @PostMapping("/add")
     public Result save(@RequestBody @Valid Project project) {
         log.info("projectController save [{}]", project);
@@ -77,7 +76,6 @@ public class ProjectController extends BaseController {
     }
 
     @ApiOperation(value = "编辑项目")
-    @CrossOrigin(origins = {"http://localhost:9527", "null"})
     @PutMapping("/update")
     public Result update(@RequestBody @Valid Project project,@RequestParam(value = "user_id") String user_id) {
         log.info("projectController update [{}]", project);
@@ -165,7 +163,6 @@ public class ProjectController extends BaseController {
     }
 
     @ApiOperation(value = "删除项目")
-    @CrossOrigin(origins = {"http://localhost:9527", "null"})
     @DeleteMapping("/delete/{id}")
     public Result delete(@PathVariable @Valid @NotBlank(message = "项目标识不能为空") String id) {
         log.info("projectController delete [{}]", id);

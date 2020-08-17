@@ -24,4 +24,8 @@ public interface UacOfficeMapper extends IMapper<UacOffice> {
     List<UacOffice> getAll();
     //UacOffice getRoot();
     List<UacOffice>  getchildren(String pid);
+    List<UacOffice> list();
+    List<UacOffice> getByIds(List<String> list);
+
+
 }

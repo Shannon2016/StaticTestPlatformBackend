@@ -4,6 +4,8 @@ import com.gbdpcloud.entity.Test;
 import gbdpcloudcommonbase.gbdpcloudcommonbase.core.IMapper;
 import org.apache.ibatis.annotations.Mapper;
 
+import java.util.List;
+
 @Mapper
 public interface TestMapper extends IMapper<Test> {
    // int deleteByPrimaryKey(String testId);
@@ -17,4 +19,5 @@ public interface TestMapper extends IMapper<Test> {
     //int updateByPrimaryKeySelective(Test record);
 
     //int updateByPrimaryKey(Test record);
+    List<Test> getByProject(String id);
 }

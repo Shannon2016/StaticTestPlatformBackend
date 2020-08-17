@@ -1,6 +1,8 @@
 package com.gbdpcloud.entity;
 
 import gbdpcloudcommonbase.gbdpcloudcommonbase.core.BaseEntity;
+import gbdpcloudprovideruserapi.gbdpcloudprovideruserapi.model.UacOffice;
+import gbdpcloudprovideruserapi.gbdpcloudprovideruserapi.service.OfficeService;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -104,4 +106,7 @@ public class Project extends BaseEntity {
 
 	@ApiModelProperty(value = "非数据库字段-历史版本")
 	private List<String> versions;
+
+	@ApiModelProperty(value = "非数据库字段-可见部门")
+	private List<UacOffice> officeList;
 }

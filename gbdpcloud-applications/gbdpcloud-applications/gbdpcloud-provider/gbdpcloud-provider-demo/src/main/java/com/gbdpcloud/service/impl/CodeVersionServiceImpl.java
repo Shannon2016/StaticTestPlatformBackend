@@ -20,8 +20,6 @@ public class CodeVersionServiceImpl extends BaseService<CodeVersion> implements 
     @Override
     public List<CodeVersion> getByProject(String id) {
 
-        CodeVersion codeVersion=new CodeVersion();
-        codeVersion.setProject_ID(id);
-        return codeVersionMapper.select(codeVersion);
+        return codeVersionMapper.selectByProject(id);
     }
 }

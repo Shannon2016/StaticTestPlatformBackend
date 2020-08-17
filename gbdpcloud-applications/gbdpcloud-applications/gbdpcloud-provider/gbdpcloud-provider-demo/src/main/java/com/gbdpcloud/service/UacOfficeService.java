@@ -10,17 +10,19 @@ import java.util.Map;
 
 public interface UacOfficeService extends Service<UacOffice> {
 
-  /*  @ApiOperation(value = "新增机构")
+    @ApiOperation(value = "新增机构")
     public int add(@Valid UacOffice uacOffice,String id);
 
     @ApiOperation(value = "更新机构信息")
     public int updateInfo(@Valid UacOffice uacOffice,String id);
 
     @ApiOperation(value = "级联删除机构")
-    public int delete(String oid,String uid);*/
+    public int delete(String oid,String uid);
 
     @ApiOperation(value = "获得机构列表")
     public List<UacOffice> listAll();
 
     public Map listAsT();
+    @ApiOperation(value = "根据id列表获取机构列表")
+    List<UacOffice> getByIds(List<String> ids);
 }

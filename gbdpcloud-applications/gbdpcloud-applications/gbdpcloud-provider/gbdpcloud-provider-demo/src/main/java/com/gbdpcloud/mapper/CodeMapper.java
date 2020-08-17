@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
 import org.apache.ibatis.annotations.Param;
+
 @Mapper
 public interface CodeMapper extends IMapper<Code> {
     //int deleteByPrimaryKey(String id);
@@ -20,4 +21,10 @@ public interface CodeMapper extends IMapper<Code> {
 
     //int updateByPrimaryKey(Code record);
     List<Code> selectProjectVserionAndName(@Param("pid")String pid, @Param("version")String version1, @Param("name")String name);
+
+    List<Code> getByProject(String id);
+
+    List<Code> getByProjectAndVersion(String id,String version);
+
+    List<Code> getByCodeVersion(String id);
 }

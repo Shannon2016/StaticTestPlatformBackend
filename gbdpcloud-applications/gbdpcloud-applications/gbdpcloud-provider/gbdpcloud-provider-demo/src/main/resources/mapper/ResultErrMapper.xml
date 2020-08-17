@@ -25,34 +25,25 @@
 
   <!--过期，仅供参考-->
   <select id="list" resultMap="BaseResultMap" >
-    SELECT
-    <include refid="Base_Column_List"/>
-    FROM result_err t
-    <where>
-      t.del_flag = '0'
-    </where>
+    SELECT* FROM result_err WHERE t.del_flag = '0'
   </select>
 
   <!--过期，仅供参考-->
   <select id="get" resultMap="BaseResultMap" >
-    SELECT
-    <include refid="Base_Column_List"/>
-    FROM result_err t
-    WHERE t.del_flag = '0'
-    <if test="id != null and id != ''">
-      AND t.id = #{id}
-    </if>
+    SELECT* FROM result_err WHERE del_flag = '0' AND id = #{id}
+  </select>
+
+  <select id="getByTest" resultMap="BaseResultMap" >
+    SELECT* FROM result_err WHERE del_flag = '0' AND test_ID = #{id}
   </select>
 
   <!--逻辑删除-->
   <update id="deleteByLogic">
-        DELETE result_err
-        WHERE id = #{id}
+        DELETE from result_err WHERE id = #{id}
     </update>
 
   <update id="deleteManyByLogic">
-        DELETE result_err
-        WHERE id IN (#{ids})
+        DELETE from result_err WHERE id IN (#{ids})
     </update>
 
   <select id="selectByTestID" parameterType="String" resultMap="BaseResultMap">

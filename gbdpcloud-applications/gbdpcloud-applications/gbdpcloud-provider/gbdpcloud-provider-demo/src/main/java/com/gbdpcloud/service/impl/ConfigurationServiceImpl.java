@@ -24,18 +24,13 @@ public class ConfigurationServiceImpl extends BaseService<Configuration> impleme
 
     public List<Configuration> getCommon(){
 
-        Configuration configuration=new Configuration();
-        configuration.setIs_common("1");
-       //List<Configuration> list = configurationMapper.selectCommon();
-        List<Configuration> list = configurationMapper.select(configuration);
+        List<Configuration> list = configurationMapper.selectCommon();
        return list;
     }
 
     @Override
     public List<Configuration> getPrivate(String user_id) {
-        Configuration configuration=new Configuration();
-        configuration.setCreateBy(user_id);
-        List<Configuration> list=configurationMapper.select(configuration);
+        List<Configuration> list=configurationMapper.selectPrivate(user_id);
         return list;
     }
 

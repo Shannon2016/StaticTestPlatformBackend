@@ -29,34 +29,31 @@
 
   <!--过期，仅供参考-->
   <select id="list" resultMap="BaseResultMap" >
-    SELECT
-    <include refid="Base_Column_List"/>
-    FROM configuration t
-    <where>
-      t.del_flag = '0'
-    </where>
+    SELECT* FROM configuration WHERE del_flag = '0'
+  </select>
+
+  <!--过期，仅供参考-->
+  <select id="selectCommon" resultMap="BaseResultMap" >
+    SELECT* FROM configuration WHERE del_flag = '0' AND is_common = '1'
+  </select>
+
+  <!--过期，仅供参考-->
+  <select id="selectPrivate" resultMap="BaseResultMap" >
+    SELECT* FROM configuration WHERE del_flag = '0' AND create_by = #{user_id}
   </select>
 
   <!--过期，仅供参考-->
   <select id="get" resultMap="BaseResultMap" >
-    SELECT
-    <include refid="Base_Column_List"/>
-    FROM configuration t
-    WHERE t.del_flag = '0'
-    <if test="id != null and id != ''">
-      AND t.id = #{id}
-    </if>
+    SELECT * from configuration WHERE del_flag = '0' AND id = #{id}
   </select>
 
   <!--逻辑删除-->
   <update id="deleteByLogic">
-        DELETE configuration
-        WHERE id = #{id}
+        DELETE from configuration WHERE id = #{id}
     </update>
 
   <update id="deleteManyByLogic">
-        DELETE configuration
-        WHERE id IN (#{ids})
+        DELETE from configuration WHERE id IN (#{ids})
     </update>
 
 </mapper>

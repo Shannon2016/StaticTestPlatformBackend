@@ -20,13 +20,8 @@ public class ResultErrServiceImpl extends BaseService<ResultErr> implements Resu
     private ResultErrMapper resultErrMapper;
     @Override
     public List<ResultErr> getByTest(String id) {
-        return resultErrMapper.selectByTestID(id);
-        /*
-             ResultErr resultErr=new ResultErr();
-        resultErr.setTest_ID(id);
-        return resultErrMapper.select(resultErr);
-         */
 
+        return resultErrMapper.getByTest(id);
     }
 
     @Override
